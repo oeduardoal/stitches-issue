@@ -4,7 +4,12 @@ import type * as Stitches from "@stitches/react";
 export const designsystem = createStitches({
   prefix: "designsystem-",
   theme: {},
-  media: {}
+  media: {},
+  utils: {
+    p: (value: Stitches.PropertyValue<"padding">) => ({
+      padding: value,
+    }),
+  },
 });
 
 export const {
@@ -15,7 +20,8 @@ export const {
   keyframes,
   styled,
   theme,
-  createTheme
+  createTheme,
 } = designsystem;
 
 export type CSS = Stitches.CSS<typeof config>;
+export type ComponentCSSProp = { css?: CSS; as?: React.ElementType };

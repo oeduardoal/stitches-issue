@@ -1,0 +1,37 @@
+name: CI + CD
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up GitHub Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node with yarn caching
+        uses: actions/setup-node@v2
+        with:
+          cache: "yarn"
+          node-version: "16.x"
+
+      - name: Set up GitHub User
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Build Packages
+        run: yarn build
